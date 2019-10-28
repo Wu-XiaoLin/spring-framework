@@ -96,12 +96,12 @@ public class XmlBeanDefinitionReaderTests {
 		testBeanDefinitions(registry);
 	}
 
-	@Test
-	public void withFreshInputStream() {
+//	@Test
+	public static void withFreshInputStream(XmlBeanDefinitionReaderTests xmlBeanDefinitionReaderTests) {
 		SimpleBeanDefinitionRegistry registry = new SimpleBeanDefinitionRegistry();
-		Resource resource = new ClassPathResource("test.xml", getClass());
+		Resource resource = new ClassPathResource("test.xml", xmlBeanDefinitionReaderTests.getClass());
 		new XmlBeanDefinitionReader(registry).loadBeanDefinitions(resource);
-		testBeanDefinitions(registry);
+		xmlBeanDefinitionReaderTests.testBeanDefinitions(registry);
 	}
 
 	private void testBeanDefinitions(BeanDefinitionRegistry registry) {

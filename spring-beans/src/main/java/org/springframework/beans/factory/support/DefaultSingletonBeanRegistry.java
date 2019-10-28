@@ -150,6 +150,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {
 		Assert.notNull(singletonFactory, "Singleton factory must not be null");
 		synchronized (this.singletonObjects) {
+			// 如果bean没有创建完成，则将对象工厂存放到三级缓存中
 			if (!this.singletonObjects.containsKey(beanName)) {
 				this.singletonFactories.put(beanName, singletonFactory);
 				this.earlySingletonObjects.remove(beanName);
@@ -174,13 +175,23 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
+		// 从单例的beanMap中查询获取bean（一级缓存）
 		Object singletonObject = this.singletonObjects.get(beanName);
+		// 如果bean未查询到，并且bean是正在创建中的
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
+			// 加锁操作
 			synchronized (this.singletonObjects) {
+				// 从提前加载的bean map中获取单例bean（从二级缓存中获取）
+				//二级缓存的作用就是存储未完全实例化的bean对象
 				singletonObject = this.earlySingletonObjects.get(beanName);
+				//如果bean不存在且允许提前使用bean引用，否则方法直接返回获取到的内容
 				if (singletonObject == null && allowEarlyReference) {
+					// 从单例bean工厂获取某个bean的工厂
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 					if (singletonFactory != null) {
+						//如果生成成功则将bean保存到二级缓存中，并从三级缓存中删除
+						//这样，就从三级缓存升级到二级缓存了。
+						//所以，二级缓存存在的意义，就是缓存三级缓存中的 ObjectFactory 的 #getObject() 方法的执行结果，提早曝光的单例 Bean 对象。
 						singletonObject = singletonFactory.getObject();
 						this.earlySingletonObjects.put(beanName, singletonObject);
 						this.singletonFactories.remove(beanName);

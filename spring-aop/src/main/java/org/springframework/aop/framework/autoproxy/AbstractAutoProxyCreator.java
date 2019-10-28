@@ -446,14 +446,17 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			AutoProxyUtils.exposeTargetClass((ConfigurableListableBeanFactory) this.beanFactory, beanName, beanClass);
 		}
 
+		// 创建 反射工厂
 		ProxyFactory proxyFactory = new ProxyFactory();
 		proxyFactory.copyFrom(this);
 
 		if (!proxyFactory.isProxyTargetClass()) {
+			// 是否需要代理bean
 			if (shouldProxyTargetClass(beanClass, beanName)) {
 				proxyFactory.setProxyTargetClass(true);
 			}
 			else {
+				// 评估bean接口
 				evaluateProxyInterfaces(beanClass, proxyFactory);
 			}
 		}
@@ -467,7 +470,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (advisorsPreFiltered()) {
 			proxyFactory.setPreFiltered(true);
 		}
-
+		// 获取代理对象
 		return proxyFactory.getProxy(getProxyClassLoader());
 	}
 

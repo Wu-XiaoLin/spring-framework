@@ -112,7 +112,7 @@ public interface Resource extends InputStreamSource {
 	URI getURI() throws IOException;
 
 	/**
-	 * Return a File handle for this resource.
+	 * return a file handle for this resource.
 	 * @throws java.io.FileNotFoundException if the resource cannot be resolved as
 	 * absolute file path, i.e. if the resource is not available in a file system
 	 * @throws IOException in case of general resolution/reading failures

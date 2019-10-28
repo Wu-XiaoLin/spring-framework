@@ -644,9 +644,9 @@ public abstract class StringUtils {
 			return pathToUse;
 		}
 
-		// Strip prefix from path to analyze, to not treat it as part of the
-		// first path element. This is necessary to correctly parse paths like
-		// "file:core/../core/io/Resource.class", where the ".." should just
+		// strip prefix from path to analyze, to not treat it as part of the
+		// first path element. this is necessary to correctly parse paths like
+		// "file:core/../core/io/resource.class", where the ".." should just
 		// strip the first "core" directory while keeping the "file:" prefix.
 		int prefixIndex = pathToUse.indexOf(':');
 		String prefix = "";
